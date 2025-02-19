@@ -10,14 +10,23 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
     private bool facingRight = true;
+    private Vector3 originPosition; // Store the player's original position
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        originPosition = transform.position; // Store the starting position
     }
 
     private void Update()
     {
+        // Teleport player back if they fall below -4.4 on Y-axis
+        if (transform.position.y < -4.4f)
+        {
+            transform.position = originPosition;
+            rb.linearVelocity = Vector2.zero; // Reset velocity to prevent instant falling again
+        }
+
         // Check if player is on the ground
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
